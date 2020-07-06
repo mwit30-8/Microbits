@@ -1,6 +1,6 @@
 //% blockID=Display
 //% block="Display"
-//% color=FFD758 weight=500
+//% color=FFD758
 namespace showData{
     /**
      * Show the compass on the screen, The bright part will point to North direction.
