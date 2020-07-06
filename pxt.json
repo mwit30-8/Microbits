@@ -2,8 +2,7 @@
     "name": "javascript_extension_display",
     "description": "",
     "dependencies": {
-        "core": "*",
-        "radio": "*"
+        "core": "*"
     },
     "files": [
         "main.ts",

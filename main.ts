@@ -1,4 +1,12 @@
+//% blockID=Display
+//% block="Display"
+//% color=FFD758 weight=500
 namespace showData{
+    /**
+     * Show the compass on the screen, The bright part will point to North direction.
+     */
+    //% blockID=showCompass
+    //% block="show Compass"
     export function compass() {
         let deg = 2*Math.PI*(input.compassHeading()-90)/360;
         for (let index_x = -2; index_x <= 2; index_x++) {
@@ -17,6 +25,15 @@ namespace showData{
             };
         };
     };
+    /**
+     * Plot the temperature.
+     * @param tmp_min minimum temperature to plot (C)
+     * @param tmp_max maximum temperature to plot (C)
+     */
+    //% blockID=showTemperature
+    //% block="show Temperature || from $tmp_min to $tmp_max"
+    //% tmp_min.defl=-5
+    //% tmp_max.defl=50
     export function temperature(tmp_min?:number,tmp_max?:number){
         let tmp = input.temperature();
         for (let index_x = 0; index_x <= 4; index_x++) {
