@@ -1,5 +1,6 @@
 {
     "name": "block_miniprojet_halflifesim",
+    "version": "1.0.0",
     "description": "",
     "dependencies": {
         "core": "*"
