@@ -317,6 +317,20 @@ namespace ABCNotation {
     export function stop(): void {
         makeStop = true;
     }
+    /**
+     * Play music
+     */
+    //% blockId=play_music block="Play music"
+    export function play(): void {
+        makeStop = false;
+    }
+    /**
+     * Toggle music
+     */
+    //% blockId=toggle_music block="Toggle music"
+    export function toggle(): void {
+        makeStop = !makeStop;
+    }
 
     function getLength(note: string, noteIndex: number) {
         let nLength: number;
