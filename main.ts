@@ -306,7 +306,7 @@ function re_chord(): boolean {
     chord.push(12)
     base_ = base
     _pitch.push(chord)
-    while ((base != 0 && rand([1, 1]) == 0) || ((_pitch.length < numb && rand([1, 1]) == 0) && numb != 0) || rand([1, 10]) == 0) {
+    while ((base != 0 || rand([10, 1]) == 0) || ((_pitch.length < numb && rand([1, 0]) == 0) && numb != 0) || rand([1, 5]) == 0) {
         if (rand([1, 10]) == 0) {
             base = movement[base_][randint(0, movement[base_].length - 1)] - 1
         } else {
