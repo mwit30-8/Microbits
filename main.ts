@@ -82,6 +82,11 @@ namespace ABCNotation {
     }
 
     /**
+     * list of information field
+     */
+    let field=["A:","B:","C:","D:","F:","G:","H:","I:","K:","L:","M:","m:","N:","O:","P:","Q:","R:","r:","S:","s:","T:","U:","V:","W:","w:","X:","Z:"];
+
+    /**
      * set key
      */
     //% blockId=set_tunekey block="set K(key) to %Key"
@@ -148,10 +153,10 @@ namespace ABCNotation {
 
     /**
      * set meter
-     * @param BPR the tempo beat per measure, eg: 4
-     * @param BL the tempo beat length, eg: 4
+     * @param BPR the beat per measure, eg: 4
+     * @param BL the beat length, eg: 4
      */
-    //% blockId=set_tunemeter block="set M(meter) to %meter"
+    //% blockId=set_tunemeter block="set M(meter) to %BPR / %BL"
     export function setMeter(BPR: number, BL: number): void {
         tuneBPR = BPR;
         tuneBL = 1/BL;
@@ -159,9 +164,10 @@ namespace ABCNotation {
 
     /**
      * set tempo
+     * @param BL the beat length, eg: 1/4
      * @param tempoValue the tempo, eg: 120
      */
-    //% blockId=set_tunetempo block="Q(tempo) to ♩= %tempoValue"
+    //% blockId=set_tunetempo block="Q(tempo) to %BL = %tempoValue"
     export function setTempo(BL: number,tempoValue: number): void {
         tuneTempo = tempoValue*BL/tuneBL;
     }
@@ -183,7 +189,6 @@ namespace ABCNotation {
     //% parts="headphone"
     export function playMeasure(tune: string) {
         let beat=0;
-        makeStop = false;
         if (tune.charAt(0) == "Z") {
             pins.analogPitch(0, (60000 / tuneTempo) * tuneBPR * parseInt(tune.slice(1)));
             return;
@@ -252,15 +257,58 @@ namespace ABCNotation {
 
     /**
      * play melody
-     * @param tune melody notes, eg:"C D E F G A B c"
+     * @param tune melody notes, eg:["X:1","T:title","K:C","C D E F G A B c"]
      */
     //% blockId=play_melody block="play %Melody"
     //% parts="headphone"
-    export function playMelody(tune: string) {
-        let measure=tune.split("|");
-        measure.map(function (note: string, index: number) {
-            playMeasure(note);
-        });
+    export function playMelody(tune: string[],refno:number=1){
+        for(let line of tune){
+            line=line.split("%")[0];
+            if (line=="X:"+refno){
+                makeStop = false;
+            }
+            if (line=="X:"+(refno+1)){
+                makeStop = true;
+            }
+            if(field.indexOf(line.slice(0,2))!=-1){
+                switch(line.charAt(0)){
+                    case "I":break;
+                    case "K":setKey(ABCNotation.Key.C, line.slice(2));break;
+                    case "L":setUNL(parseInt(line.slice(2).split("/",2)[0])/parseInt(line.slice(2).split("/",2)[1]));break;
+                    case "M":setMeter(parseInt(line.slice(2).split("/",2)[0]),parseInt(line.slice(2).split("/",2)[1]));break;
+                    case "m":break;
+                    case "P":break;
+                    case "Q":setTempo(parseInt(line.slice(2).split("=",2)[0].split("/",2)[0])/parseInt(line.slice(2).split("=",2)[0].split("/",2)[1]),parseInt(line.slice(2).split("=",2)[1]));break;
+                    case "s":break;
+                    case "U":break;
+                    case "V":break;
+                }
+            } else {
+                line=line.replaceAll("a", " a");
+                line=line.replaceAll("b", " b");
+                line=line.replaceAll("c", " c");
+                line=line.replaceAll("d", " d");
+                line=line.replaceAll("e", " e");
+                line=line.replaceAll("f", " f");
+                line=line.replaceAll("g", " g");
+                line=line.replaceAll("A", " A");
+                line=line.replaceAll("B", " B");
+                line=line.replaceAll("C", " C");
+                line=line.replaceAll("D", " D");
+                line=line.replaceAll("E", " E");
+                line=line.replaceAll("F", " F");
+                line=line.replaceAll("G", " G");
+                while(line.indexOf("= ")!=-1||line.indexOf("^ ")!=-1||line.indexOf("_ ")!=-1){
+                    line=line.replaceAll("= ", " =");
+                    line=line.replaceAll("^ ", " ^");
+                    line=line.replaceAll("_ ", " _");
+                }
+                serial.writeLine(line)
+                for(let measure of line.split("|")){
+                    playMeasure(measure);
+                }
+            }
+        }
     }
     /**
      * Stop music
