@@ -1,22 +1,26 @@
 input.onButtonPressed(Button.A, function() {
-    re_chord()
+    re_chord();
+    print();
 })
 input.onButtonPressed(Button.B, function() {
-    re_arpeggio()
+    re_arpeggio();
+    print();
 })
 input.onGesture(Gesture.Shake, function() {
-    re_rhythm()
+    re_rhythm();
+    print();
 })
 input.onButtonPressed(Button.AB, function() {
-    re_rhythm()
+    re_rhythm();
     if (!re_chord()) {
-        re_arpeggio()
+        re_arpeggio();
     }
+    print();
 })
-let interval = [1 / 1, 16 / 15, 9 / 8, 6 / 5, 5 / 4, 4 / 3, 45 / 32, 3 / 2, 8 / 5, 5 / 3, 16 / 9, 15 / 8, 2 / 1]
+let interval = [1 / 1, 16 / 15, 9 / 8, 6 / 5, 5 / 4, 4 / 3, 45 / 32, 3 / 2, 8 / 5, 5 / 3, 16 / 9, 15 / 8, 2 / 1];
 //let resolve = [[0], [-1], [-2, 1, 2], [0], [0], [-1], [-2,3], [0], [-1], [-2], [2], [1], [0]]
-let scale = [0, 2, 4, 5, 7, 9, 11]
-let notes = ["=C","_D","=D","_E","=E","=F","^F","=G","^G","=A","^A","=B","=c","_d","=d","_e","=e","=f","^f","=g","^g","=a","^a","=b"];
+let scale = [0, 2, 4, 5, 7, 9, 11];
+let notes = ["=C,","_D,","=D,","_E,","=E,","=F,","^F,","=G,","^G,","=A,","^A,","=B,","=C","_D","=D","_E","=E","=F","^F","=G","^G","=A","^A","=B","=c","_d","=d","_e","=e","=f","^f","=g","^g","=a","^a","=b"];
 let movement = [
     [1],
     [3, 5],
@@ -25,7 +29,7 @@ let movement = [
     [1],
     [2, 4],
     [5]
-]
+];
 //let satisfy_interval = [0,7,5,4,9,10,3,14,11,18,8,13,2,1]
 let pitch = [
     [0, 0, 4, 7, 9, 10],
@@ -40,8 +44,8 @@ let pitch = [
     [5, 0, 4, 7, 9, 10],
     [0, 0, 4, 7, 9, 10],
     [0, 0, 4, 7, 9, 10]
-]
-let pitch_ = pitch
+];
+let pitch_ = pitch;
 let rhythm = [
     [1, 1],
     [1, 2],
@@ -51,54 +55,89 @@ let rhythm = [
     [1, 4],
     [1, 3],
     [1, 2]
-]
-let rhythm_ = rhythm
-ABCNotation.playMelody(["X:1",
-"T:AutoCreated",
-"C:Me",
-"L:1/8",
-"Q:1/4=240",
-"M:4/4",
-"K:"])
-serial.writeLine("X:1")
-serial.writeLine("T:AutoCreated")
-serial.writeLine("C:Me")
-serial.writeLine("L:1/8")
-serial.writeLine("Q:1/4=240")
-serial.writeLine("K:")
+];
+let rhythm_ = rhythm;
 basic.forever(function() {
+    ABCNotation.playMelody(["X:1",
+    "T:AutoCreated",
+    "C:Me",
+    "L:1/8",
+    "Q:1/4=240",
+    "M:4/4",
+    "K:"]);
     for (let r = 0; r < pitch_.length; r++) {
-        let room="z"
+        let room="";
         let steak=0;
         for (let b = 0; b < 8; b++) {
             if (rhythm_[b][0] == 0) {
                 if (rhythm_[(b + 1) % rhythm.length][0] == 0) {
-                    steak+=1
+                    steak+=1;
                 } else {
-                    room=room+steak+" "
-                    room=room+"z"
+                    room=room+steak+" ";
+                    room=room+"z";
                     steak=1;
                 }
             } else {
                 if (rhythm_[b][1] == 0) {
-                    room=room+steak+" "
-                    room=room+"z"
+                    room=room+steak+" ";
+                    room=room+"z";
                     steak=1;
                 } else {
-                    room=room+steak+" "
-                    room=room+" "+notes[pitch_[r][0]+pitch_[r][rhythm_[b][1]]]
+                    room=room+steak+" ";
+                    room=room+" "+notes[pitch_[r][0]+pitch_[r][rhythm_[b][1]]];
                     steak=1;
                 }
             }
         }
         room=room+steak+" ";
-        room=room.replace("z0", "");
-        serial.writeString(room+"|");
+        room=room.replaceAll("0", "");
+        room=room.replaceAll("1", "");
         ABCNotation.playMeasure(room);
-        rhythm_ = rhythm
-        pitch_ = pitch
+        rhythm_ = rhythm;
+        pitch_ = pitch;
     }
 })
+
+function print(){
+    let rhythm_=rhythm;
+    let pitch_=pitch;
+    serial.writeLine("X:1");
+    serial.writeLine("T:AutoCreated");
+    serial.writeLine("C:Me");
+    serial.writeLine("L:1/8");
+    serial.writeLine("Q:1/4=240");
+    serial.writeLine("K:");
+    for (let r = 0; r < pitch_.length; r++) {
+        let room="";
+        let steak=0;
+        for (let b = 0; b < 8; b++) {
+            if (rhythm_[b][0] == 0) {
+                if (rhythm_[(b + 1) % rhythm.length][0] == 0) {
+                    steak+=1;
+                } else {
+                    room=room+steak+" ";
+                    room=room+"z";
+                    steak=1;
+                }
+            } else {
+                if (rhythm_[b][1] == 0) {
+                    room=room+steak+" ";
+                    room=room+"z";
+                    steak=1;
+                } else {
+                    room=room+steak+" ";
+                    room=room+" "+notes[pitch_[r][0]+pitch_[r][rhythm_[b][1]]];
+                    steak=1;
+                }
+            }
+        }
+        room=room+steak+" ";
+        room=room.replaceAll("0", "");
+        room=room.replaceAll("1", "");
+        serial.writeString(room+"|");
+    }
+    serial.writeLine("");
+}
 
 function factor(int: number): number {
     let fact = 1
