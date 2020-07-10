@@ -4,7 +4,7 @@
     "dependencies": {
         "core": "*",
         "radio": "*",
-        "javascript_extension_abc": "github:mwit30-8/javascript_extension_abc#master"
+        "javascript_extension_abc": "github:mwit30-8/javascript_extension_abc#v1.1.1"
     },
     "files": [
         "main.ts",
