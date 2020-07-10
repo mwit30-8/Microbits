@@ -57,14 +57,15 @@ let rhythm = [
     [1, 2]
 ];
 let rhythm_ = rhythm;
+let x=1;
 basic.forever(function() {
-    ABCNotation.playMelody(["X:1",
-    "T:AutoCreated",
+    ABCNotation.playMelody(["X:"+x,
+    "T:AutoCreated#"+x,
     "C:Me",
     "L:1/8",
     "Q:1/4=240",
     "M:4/4",
-    "K:"]);
+    "K:"],x);
     for (let r = 0; r < pitch_.length; r++) {
         let room="";
         let steak=0;
@@ -101,8 +102,8 @@ basic.forever(function() {
 function print(){
     let rhythm_=rhythm;
     let pitch_=pitch;
-    serial.writeLine("X:1");
-    serial.writeLine("T:AutoCreated");
+    serial.writeLine("X:"+x);
+    serial.writeLine("T:AutoCreated#"+x);
     serial.writeLine("C:Me");
     serial.writeLine("L:1/8");
     serial.writeLine("Q:1/4=240");
@@ -137,6 +138,7 @@ function print(){
         serial.writeString(room+"|");
     }
     serial.writeLine("");
+    x+=1;
 }
 
 function factor(int: number): number {
