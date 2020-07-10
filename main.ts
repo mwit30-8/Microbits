@@ -191,7 +191,7 @@ namespace ABCNotation {
         let beat=0;
         if (tune.charAt(0) == "Z") {
             pins.analogPitch(0, (60000 / tuneTempo) * tuneBPR * parseInt(tune.slice(1)));
-            return;
+            return true;
         }
         let noteKey = tuneKey;
         let note: string[] = tune.split(' ');
@@ -253,6 +253,7 @@ namespace ABCNotation {
                 }
             }
         });
+        return !makeStop;
     }
 
     /**
