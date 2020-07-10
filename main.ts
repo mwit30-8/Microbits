@@ -253,7 +253,7 @@ namespace ABCNotation {
                 }
             }
         });
-        return !makeStop;
+        return makeStop;
     }
 
     /**
@@ -330,7 +330,7 @@ namespace ABCNotation {
      */
     //% blockId=toggle_music block="Toggle music"
     export function toggle(): void {
-        makeStop = !makeStop;
+        if(makeStop){makeStop = false} else {makeStop = true}
     }
 
     function getLength(note: string, noteIndex: number) {
