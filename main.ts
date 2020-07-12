@@ -57,8 +57,8 @@ let rhythm = [
     [1, 2]
 ];
 let rhythm_ = rhythm;
-let x=1;
-let beat=rhythm.length;
+let x:number=1;
+let beat:number=rhythm.length;
 basic.forever(function() {
     ABCNotation.playMelody(["X:"+x,
     "T:AutoCreated#"+x,
@@ -68,8 +68,8 @@ basic.forever(function() {
     "M:"+beat+"/"+beat,
     "K:"],x);
     for (let r = 0; r < pitch_.length; r++) {
-        let room="";
-        let steak=0;
+        let room:string="";
+        let steak:number=0;
         for (let b = 0; b < 8; b++) {
             if (rhythm_[b][0] == 0) {
                 if (rhythm_[(b + 1) % rhythm.length][0] == 0) {
@@ -123,15 +123,9 @@ function print(){
                     steak=1;
                 }
             } else {
-                if (rhythm_[b][1] == 0) {
-                    room=room+steak+" ";
-                    room=room+"z";
-                    steak=1;
-                } else {
-                    room=room+steak+" ";
-                    room=room+" "+notes[pitch_[r][0]+pitch_[r][rhythm_[b][1]]];
-                    steak=1;
-                }
+                room=room+steak+" ";
+                room=room+" "+notes[pitch_[r][0]+pitch_[r][rhythm_[b][1]]];
+                steak=1;
             }
         }
         room=room+steak+" ";
@@ -205,28 +199,24 @@ function re_chord(): boolean {
         if (includes(scale, (base + 4))) {
             sus_prop[2] *= fixscale
         }
-        if (includes(scale, (base + 4))) {
+        if (includes(scale, (base + 5))) {
             sus_prop[3] *= fixscale
         }
         let major3 = (rand([sus_prop[1], sus_prop[2]]) == 1)
         let sus = rand(sus_prop)
         switch (sus) {
             case 0:
-                op = op + "sus2"
                 chord.push(2)
                 break
             case 1:
-                op = op + "min"
                 chord.push(3)
                 major3 = false
                 break
             case 2:
-                op = op + "maj"
                 chord.push(4)
                 major3 = true
                 break
             case 3:
-                op = op + "sus4"
                 chord.push(5)
                 break
         }
@@ -248,15 +238,12 @@ function re_chord(): boolean {
             let fifth = rand(fifth_prop)
             switch (fifth) {
                 case 0:
-                    op = op + "dim"
                     chord.push(6)
                     break
                 case 1:
-                    op = op + "_"
                     chord.push(7)
                     break
                 case 2:
-                    op = op + "aug"
                     chord.push(8)
                     break
             }
@@ -279,30 +266,25 @@ function re_chord(): boolean {
                 let major7 = rand(major7_prop)
                 if (major7 == 0) {
                     chord.push(10)
-                    op = op + "7"
                 } else {
                     chord.push(11)
-                    op = op + "M7"
                 }
                 if (chord[2] == 6) {
                     chord[3] -= 1
                 }
             }
         }
-    } else {
-        op = op + "single"
     }
     chord.push(12)
     base_ = base
     _pitch.push(chord)
-    while ((base != 0 || rand([10, 1]) == 0) || ((_pitch.length < numb && rand([1, 0]) == 0) && numb != 0) || rand([1, 5]) == 0) {
-        if (rand([1, 10]) == 0) {
+    while ((base != 0 || rand([5, 1]) == 0) || ((_pitch.length < numb && rand([1, 0]) == 0) && numb != 0) || rand([1, 5]) == 0) {
+        if (rand([15, 2]) == 0) {
             base = movement[base_][randint(0, movement[base_].length - 1)] - 1
         } else {
             base = randint(0, scale.length - 1)
         }
         let chord = [scale[base], 0]
-        let op = "" + (base + 1)
         if (range > 0) {
             if (includes(scale, (base + 2))) {
                 sus_prop[0] *= fixscale
@@ -313,28 +295,24 @@ function re_chord(): boolean {
             if (includes(scale, (base + 4))) {
                 sus_prop[2] *= fixscale
             }
-            if (includes(scale, (base + 4))) {
+            if (includes(scale, (base + 5))) {
                 sus_prop[3] *= fixscale
             }
             let major3 = (rand([sus_prop[1], sus_prop[2]]) == 1)
             let sus = rand(sus_prop)
             switch (sus) {
                 case 0:
-                    op = op + "sus2"
                     chord.push(2)
                     break
                 case 1:
-                    op = op + "min"
                     chord.push(3)
                     major3 = false
                     break
                 case 2:
-                    op = op + "maj"
                     chord.push(4)
                     major3 = true
                     break
                 case 3:
-                    op = op + "sus4"
                     chord.push(5)
                     break
             }
@@ -356,15 +334,12 @@ function re_chord(): boolean {
                 let fifth = rand(fifth_prop)
                 switch (fifth) {
                     case 0:
-                        op = op + "dim"
                         chord.push(6)
                         break
                     case 1:
-                        op = op + "_"
                         chord.push(7)
                         break
                     case 2:
-                        op = op + "aug"
                         chord.push(8)
                         break
                 }
@@ -387,10 +362,8 @@ function re_chord(): boolean {
                     let major7 = rand(major7_prop)
                     if (major7 == 0) {
                         chord.push(10)
-                        op = op + "7"
                     } else {
                         chord.push(11)
-                        op = op + "M7"
                     }
                     if (chord[2] == 6) {
                         chord[3] -= 1
