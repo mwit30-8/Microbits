@@ -64,7 +64,7 @@ basic.forever(function() {
     "T:AutoCreated#"+x,
     "C:Me",
     "L:1/"+beat,
-    "Q:1/"+beat+"=240",
+    "Q:1/"+beat+"=480",
     "M:"+beat+"/"+beat,
     "K:"],x);
     for (let r = 0; r < pitch_.length; r++) {
@@ -80,15 +80,9 @@ basic.forever(function() {
                     steak=1;
                 }
             } else {
-                if (rhythm_[b][1] == 0) {
-                    room=room+steak+" ";
-                    room=room+"z";
-                    steak=1;
-                } else {
-                    room=room+steak+" ";
-                    room=room+" "+notes[pitch_[r][0]+pitch_[r][rhythm_[b][1]]];
-                    steak=1;
-                }
+                room=room+steak+" ";
+                room=room+" "+notes[pitch_[r][0]+pitch_[r][rhythm_[b][1]]];
+                steak=1;
             }
         }
         room=room+steak+" ";
@@ -107,7 +101,7 @@ function print(){
     serial.writeLine("T:AutoCreated#"+x);
     serial.writeLine("C:Me");
     serial.writeLine("L:1/"+beat);
-    serial.writeLine("Q:1/"+beat+"=120");
+    serial.writeLine("Q:1/"+beat+"=480");
     serial.writeLine("M:"+beat+"/"+beat);
     serial.writeLine("K:");
     for (let r = 0; r < pitch_.length; r++) {
@@ -146,15 +140,15 @@ function rand(ratio: number[]): number {
     if (sum == 0) {
         random = randint(0, ratio.length)
     } else {
-        let prop = [ratio[0] / sum]
+        let prob = [ratio[0] / sum]
         for (let i = 1; i < ratio.length; i++) {
-            prop[i] = prop[i - 1] + (ratio[i] / sum)
+            prob[i] = prob[i - 1] + (ratio[i] / sum)
         }
-        for (let i = 0; i < prop.length; i++) {
-            if (prop[i] == prop[i - 1]) {
+        for (let i = 0; i < prob.length; i++) {
+            if (prob[i] == prob[i - 1]) {
                 i++
             }
-            if (num > prop[i]) {
+            if (num > prob[i]) {
                 random += 1
             }
             if (num < ratio.length) {
@@ -179,31 +173,30 @@ function includes(arr: number[], value: number): boolean {
 function re_chord(): boolean {
     let numb = 0
     let range = randint(0, 3)
-    let sus_prop = [0, 10, 10, 0]
-    let fifth_prop = [0, 10, 0]
-    let major7_prop = [1, 1]
+    let sus_prob = [0, 10, 10, 0]
+    let fifth_prob = [0, 10, 0]
+    let major7_prob = [1, 1]
     let fixscale = 5
     let _pitch = []
     let base = 0
     let base_ = base
     base = randint(0, scale.length - 1)
     let chord = [scale[base], 0]
-    let op = "" + (base + 1)
     if (range > 0) {
         if (includes(scale, (base + 2))) {
-            sus_prop[0] *= fixscale
+            sus_prob[0] *= fixscale
         }
         if (includes(scale, (base + 3))) {
-            sus_prop[1] *= fixscale
+            sus_prob[1] *= fixscale
         }
         if (includes(scale, (base + 4))) {
-            sus_prop[2] *= fixscale
+            sus_prob[2] *= fixscale
         }
         if (includes(scale, (base + 5))) {
-            sus_prop[3] *= fixscale
+            sus_prob[3] *= fixscale
         }
-        let major3 = (rand([sus_prop[1], sus_prop[2]]) == 1)
-        let sus = rand(sus_prop)
+        let major3 = (rand([sus_prob[1], sus_prob[2]]) == 1)
+        let sus = rand(sus_prob)
         switch (sus) {
             case 0:
                 chord.push(2)
@@ -222,20 +215,20 @@ function re_chord(): boolean {
         }
         if (range > 1) {
             if (includes(scale, (base + 6))) {
-                fifth_prop[0] *= fixscale
+                fifth_prob[0] *= fixscale
             }
             if (includes(scale, (base + 7))) {
-                fifth_prop[1] *= fixscale
+                fifth_prob[1] *= fixscale
             }
             if (includes(scale, (base + 8))) {
-                fifth_prop[2] *= fixscale
+                fifth_prob[2] *= fixscale
             }
             if (major3) {
-                fifth_prop[0] = 0
+                fifth_prob[0] = 0
             } else {
-                fifth_prop[2] = 0
+                fifth_prob[2] = 0
             }
-            let fifth = rand(fifth_prop)
+            let fifth = rand(fifth_prob)
             switch (fifth) {
                 case 0:
                     chord.push(6)
@@ -250,20 +243,20 @@ function re_chord(): boolean {
             if (range > 2) {
                 if (chord[2] == 6) {
                     if (includes(scale, (base + 9))) {
-                        major7_prop[0] *= fixscale
+                        major7_prob[0] *= fixscale
                     }
                     if (includes(scale, (base + 10))) {
-                        major7_prop[1] *= fixscale
+                        major7_prob[1] *= fixscale
                     }
                 } else {
                     if (includes(scale, (base + 10))) {
-                        major7_prop[0] *= fixscale
+                        major7_prob[0] *= fixscale
                     }
                     if (includes(scale, (base + 11))) {
-                        major7_prop[1] *= fixscale
+                        major7_prob[1] *= fixscale
                     }
                 }
-                let major7 = rand(major7_prop)
+                let major7 = rand(major7_prob)
                 if (major7 == 0) {
                     chord.push(10)
                 } else {
@@ -278,7 +271,7 @@ function re_chord(): boolean {
     chord.push(12)
     base_ = base
     _pitch.push(chord)
-    while ((base != 0 || rand([5, 1]) == 0) || ((_pitch.length < numb && rand([1, 0]) == 0) && numb != 0) || rand([1, 5]) == 0) {
+    while ((base != 0 && rand([5, 1]) == 0) || ((_pitch.length < numb && rand([1, 0]) == 0) && numb != 0) || rand([1, 5]) == 0) {
         if (rand([15, 2]) == 0) {
             base = movement[base_][randint(0, movement[base_].length - 1)] - 1
         } else {
@@ -287,19 +280,19 @@ function re_chord(): boolean {
         let chord = [scale[base], 0]
         if (range > 0) {
             if (includes(scale, (base + 2))) {
-                sus_prop[0] *= fixscale
+                sus_prob[0] *= fixscale
             }
             if (includes(scale, (base + 3))) {
-                sus_prop[1] *= fixscale
+                sus_prob[1] *= fixscale
             }
             if (includes(scale, (base + 4))) {
-                sus_prop[2] *= fixscale
+                sus_prob[2] *= fixscale
             }
             if (includes(scale, (base + 5))) {
-                sus_prop[3] *= fixscale
+                sus_prob[3] *= fixscale
             }
-            let major3 = (rand([sus_prop[1], sus_prop[2]]) == 1)
-            let sus = rand(sus_prop)
+            let major3 = (rand([sus_prob[1], sus_prob[2]]) == 1)
+            let sus = rand(sus_prob)
             switch (sus) {
                 case 0:
                     chord.push(2)
@@ -318,20 +311,20 @@ function re_chord(): boolean {
             }
             if (range > 1) {
                 if (includes(scale, (base + 6))) {
-                    fifth_prop[0] *= fixscale
+                    fifth_prob[0] *= fixscale
                 }
                 if (includes(scale, (base + 7))) {
-                    fifth_prop[1] *= fixscale
+                    fifth_prob[1] *= fixscale
                 }
                 if (includes(scale, (base + 8))) {
-                    fifth_prop[2] *= fixscale
+                    fifth_prob[2] *= fixscale
                 }
                 if (major3) {
-                    fifth_prop[0] = 0
+                    fifth_prob[0] = 0
                 } else {
-                    fifth_prop[2] = 0
+                    fifth_prob[2] = 0
                 }
-                let fifth = rand(fifth_prop)
+                let fifth = rand(fifth_prob)
                 switch (fifth) {
                     case 0:
                         chord.push(6)
@@ -346,20 +339,20 @@ function re_chord(): boolean {
                 if (range > 2) {
                     if (chord[2] == 6) {
                         if (includes(scale, (base + 9))) {
-                            major7_prop[0] *= fixscale
+                            major7_prob[0] *= fixscale
                         }
                         if (includes(scale, (base + 10))) {
-                            major7_prop[1] *= fixscale
+                            major7_prob[1] *= fixscale
                         }
                     } else {
                         if (includes(scale, (base + 10))) {
-                            major7_prop[0] *= fixscale
+                            major7_prob[0] *= fixscale
                         }
                         if (includes(scale, (base + 11))) {
-                            major7_prop[1] *= fixscale
+                            major7_prob[1] *= fixscale
                         }
                     }
-                    let major7 = rand(major7_prop)
+                    let major7 = rand(major7_prob)
                     if (major7 == 0) {
                         chord.push(10)
                     } else {
@@ -370,8 +363,6 @@ function re_chord(): boolean {
                     }
                 }
             }
-        } else {
-            op = op + "single"
         }
         chord.push(12)
         base_ = base
