@@ -58,13 +58,14 @@ let rhythm = [
 ];
 let rhythm_ = rhythm;
 let x=1;
+let beat=rhythm.length;
 basic.forever(function() {
     ABCNotation.playMelody(["X:"+x,
     "T:AutoCreated#"+x,
     "C:Me",
-    "L:1/8",
-    "Q:1/4=240",
-    "M:4/4",
+    "L:1/"+beat,
+    "Q:1/"+beat+"=240",
+    "M:"+beat+"/"+beat,
     "K:"],x);
     for (let r = 0; r < pitch_.length; r++) {
         let room="";
@@ -105,8 +106,9 @@ function print(){
     serial.writeLine("X:"+x);
     serial.writeLine("T:AutoCreated#"+x);
     serial.writeLine("C:Me");
-    serial.writeLine("L:1/8");
-    serial.writeLine("Q:1/4=240");
+    serial.writeLine("L:1/"+beat);
+    serial.writeLine("Q:1/"+beat+"=120");
+    serial.writeLine("M:"+beat+"/"+beat);
     serial.writeLine("K:");
     for (let r = 0; r < pitch_.length; r++) {
         let room="";
@@ -139,21 +141,6 @@ function print(){
     }
     serial.writeLine("");
     x+=1;
-}
-
-function factor(int: number): number {
-    let fact = 1
-    let i = int
-    while (i < 0) {
-        fact *= 1 / interval[interval.length - 1]
-        i += (interval.length - 1)
-    }
-    while (i > interval.length) {
-        fact *= interval[interval.length - 1]
-        i -= (interval.length - 1)
-    }
-    fact *= interval[i]
-    return fact
 }
 
 function rand(ratio: number[]): number {
