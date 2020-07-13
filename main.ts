@@ -3,60 +3,70 @@ const swap:number[]=[1000, 100];
 const pick:number[]=[75, 10];
 // param for console log only;
 
-let population:boolean[];
-
-function _init_(num:number):void{
-    population=[];
-    while(population.length<num){
-        population.push(false);
+class population{
+    public population:boolean[];
+    public num:number;
+constructor(num:number){
+    this.population=[];
+    this.num=num;
+    while(this.population.length<num){
+        this.population.push(false);
     }
 }
-function sort(swap:number[]):void{
+public _init_(num:number):void{
+    this.population=[];
+    while(this.population.length<num){
+        this.population.push(false);
+    }
+}
+public sort(swap:number[]):void{
     let shake:number=Math.floor(generateGaussianNoise(swap[0], swap[1]));
     for(let i:number=0;i<shake;i++){
-        let a:number=randint(0, num-1);
-        let b:number=randint(0, num-1);
-        let _a:boolean=population[a];
-        let _b:boolean=population[b];
-        population[a]=_b;
-        population[b]=_a;
+        let a:number=randint(0, this.num-1);
+        let b:number=randint(0, this.num-1);
+        let _a:boolean=this.population[a];
+        let _b:boolean=this.population[b];
+        this.population[a]=_b;
+        this.population[b]=_a;
     }
 }
-function mark(pick:number[]):number{
+public mark(pick:number[]):number{
     let pickup:number=Math.floor(generateGaussianNoise(pick[0], pick[1]));
     for(let i:number=0;i<pickup;i++){
-        population[i]=true;
+        this.population[i]=true;
     }
     return pickup;
 }
-function check(pick:number[]):number[]{
+public check(pick:number[]):number[]{
     let pickup:number=Math.floor(generateGaussianNoise(pick[0], pick[1]));
     let marked:number=0;
     for(let i:number=0;i<pickup;i++){
-        if(population[i]){
+        if(this.population[i]){
             marked++;
         }
     }
     return [pickup,marked];
 }
-function showCheck(pick:number[]):boolean[]{
+public showCheck(pick:number[]):boolean[]{
     let pickup:number=Math.floor(generateGaussianNoise(pick[0], pick[1]));
     let op:boolean[]=[]
     for(let i:number=0;i<pickup;i++){
-        op.push(population[i])
+        op.push(this.population[i])
     }
     return op;
 }
-function process(num:number,swap:number[],pick:number[]):number[]{
-    _init_(num);
-    let m1:number=mark(pick);
-    sort(swap);
-    let checking:number[]=check(pick);
+public process(num:number,swap:number[],pick:number[]):number[]{
+    this._init_(num);
+    let m1:number=this.mark(pick);
+    this.sort(swap);
+    let checking:number[]=this.check(pick);
     let t2=checking[0];
     let m2=checking[1];
     let p=(t2/m2)*m1;
     return [m1,t2,m2,p];
 }
+}
+
 function generateGaussianNoise(mu:number, sigma:number):number{
 	const epsilon:number = 0;
 	const two_pi:number = 2.0 * Math.PI;
@@ -74,24 +84,28 @@ function generateGaussianNoise(mu:number, sigma:number):number{
 }
 basic.forever(function () {
     // local param for screen
-    _init_(100);
-    mark([25,0]);
+    let screen:population=new population(50);
+    screen.mark([25,0]);
     led.setBrightness(64);
     for(let x:number=0;x<5;x++){
         for(let y:number=0;y<5;y++){
-            led.plot(x, y);
+            if(screen.population[x+5*y]){
+                led.plot(x, y);
+            } else {
+                led.unplot(x, y);
+            }
         }
     }
     basic.pause(100);
     let shake:number=Math.floor(generateGaussianNoise(swap[0], swap[1]));
     led.setBrightness(128);
     for(let i:number=0;i<shake;i++){
-        let a:number=randint(0, num-1);
-        let b:number=randint(0, num-1);
-        let _a:boolean=population[a];
-        let _b:boolean=population[b];
-        population[a]=_b;
-        population[b]=_a;
+        let a:number=randint(0, screen.num-1);
+        let b:number=randint(0, screen.num-1);
+        let _a:boolean=screen.population[a];
+        let _b:boolean=screen.population[b];
+        screen.population[a]=_b;
+        screen.population[b]=_a;
         if(a<25){
             if(_b){
                 led.plot(a%5, Math.floor(a/5));
@@ -110,10 +124,10 @@ basic.forever(function () {
     }
     basic.pause(500);
     led.setBrightness(255);
-    let screen=showCheck([25,0]);
+    let scr=screen.showCheck([25,0]);
     for(let x:number=0;x<5;x++){
         for(let y:number=0;y<5;y++){
-            if(screen[x+5*y]){
+            if(scr[x+5*y]){
                 led.plot(x, y);
             } else {
                 led.unplot(x, y);
@@ -121,9 +135,10 @@ basic.forever(function () {
         }
     }
     basic.pause(1000);
-    let console:number[];
+    let console:population=new population(num);
+    let cons:number[];
     for(let i = 0; i < randint(0, 100); i++) {
-        console=process(num,swap,pick);
+        cons=console.process(num,swap,pick);
     }
-    serial.writeNumbers(console);
+    serial.writeNumbers(cons);
 })
