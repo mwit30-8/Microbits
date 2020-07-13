@@ -1,6 +1,6 @@
-const num:number = 542;
+const num:number = 513;
 const swap:number[]=[1000, 100];
-const pick:number[]=[50, 25];
+const pick:number[]=[75, 10];
 
 
 let population:boolean[];
@@ -72,11 +72,6 @@ function generateGaussianNoise(mu:number, sigma:number):number{
 
 	return z0 * sigma + mu;
 }
-let op:number[];
-for(let i = 0; i < randint(0, 100); i++) {
-    op=process(num,swap,pick);
-}
-serial.writeNumbers(op);
 basic.forever(function () {
     _init_(num);
     mark([25,0]);
@@ -114,10 +109,10 @@ basic.forever(function () {
     }
     basic.pause(500);
     led.setBrightness(255);
-    let op=showCheck([25,0]);
+    let screen=showCheck([25,0]);
     for(let x:number=0;x<5;x++){
         for(let y:number=0;y<5;y++){
-            if(op[x+5*y]){
+            if(screen[x+5*y]){
                 led.plot(x, y);
             } else {
                 led.unplot(x, y);
@@ -125,4 +120,9 @@ basic.forever(function () {
         }
     }
     basic.pause(1000);
+    let console:number[];
+    for(let i = 0; i < randint(0, 100); i++) {
+        console=process(num,swap,pick);
+    }
+    serial.writeNumbers(console);
 })
