@@ -1,7 +1,7 @@
 const num:number = 513;
 const swap:number[]=[1000, 100];
 const pick:number[]=[75, 10];
-
+// param for console log only;
 
 let population:boolean[];
 
@@ -73,7 +73,8 @@ function generateGaussianNoise(mu:number, sigma:number):number{
 	return z0 * sigma + mu;
 }
 basic.forever(function () {
-    _init_(num);
+    // local param for screen
+    _init_(100);
     mark([25,0]);
     led.setBrightness(64);
     for(let x:number=0;x<5;x++){
