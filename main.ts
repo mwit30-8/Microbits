@@ -62,7 +62,7 @@ namespace games{
     }
 
 
-namespace towerofhanoi{
+export namespace towerofhanoi{
     export class tower{
         public height:number;
         constructor(height:number){
