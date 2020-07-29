@@ -266,6 +266,53 @@ for(let move of soln){
         }
     }
 
+
+    export namespace newcombparadox{
+        const reward:number=1000;
+        const minreward:number=0;
+        const maxreward:number=1000000;
+        const prediction_accuracy_B:number=0.9;
+        const prediction_accuracy_AB:number=0.9;
+        let prize:number=0;
+        function B():void {
+            if(Math.random()<prediction_accuracy_B){
+                prize+=maxreward;
+            }else{
+                prize+=minreward;
+            }
+        }
+        function A():void {
+            prize+=reward;
+            if(Math.random()<prediction_accuracy_AB){
+                prize+=minreward;
+            }else{
+                prize+=maxreward;
+            }
+        }
+        export function sample(){
+            music.startMelody(music.builtInMelody(Melodies.Chase),MelodyOptions.ForeverInBackground);
+            basic.forever(function () {
+                let display:number=prize;
+                let l:number=2;
+                for(let x=0;x<5;x++){
+                    for(let y=0;y<5;y++){
+                        led.plotBrightness(x,y,(display%l)*255/(l-1));
+                        display=Math.floor(display/l)
+                    }
+                }
+            });
+            input.onButtonPressed(Button.A, function () {
+                prize=0;
+                A();
+            });
+            input.onButtonPressed(Button.B, function () {
+                prize=0;
+                B();
+            });
+        }
+    }
+
+
     export namespace hexapawn{
     export enum state{
         empty=0,
