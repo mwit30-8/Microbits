@@ -1,0 +1,22 @@
+{
+    "name": "javascript_project_abcautojukebox",
+    "version": "1.0.1",
+    "description": "",
+    "dependencies": {
+        "core": "*",
+        "radio": "*",
+        "javascript_extension_abc": "github:mwit30-8/javascript_extension_abc#v1.1.1"
+    },
+    "files": [
+        "main.ts",
+        "README.md"
+    ],
+    "testFiles": [
+        "test.ts"
+    ],
+    "supportedTargets": [
+        "microbit"
+    ],
+    "preferredEditor": "tsprj",
+    "languageRestriction": "javascript-only"
+}
